@@ -35,6 +35,15 @@
                     padding: 12px 15px;
                     margin-bottom: 15px;
                     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+                    position: relative;
+               }
+
+               .message-box .info-date {
+                    position: absolute;
+                    top: 12px;
+                    right: 16px;
+                    font-size: 0.85em;
+                    color: #888;
                }
           </style>
      </head>
@@ -55,19 +64,23 @@
                <div class="main">
                     <div class="content">
                          <div class="info-box">
-                              <span class="info-date" id="current-date"></span>
+                              <span class="info-date" id="header-date"></span>
                               <p style="margin-top: 0;">
-                                   <br> Welcome to the official project page for the open-source <strong>RS2 Emulation</strong>. <br/> This project is focused primarily on singleplayer gameplay, offering an offline RuneScape experience. <br/> You can find a ready-to-play package available for download in the right-hand menu. <br/> The site is frequently updated — feel free to explore and come back often.
+                                   <br /> Welcome to the official project page for the open-source <strong>RS2 Emulation</strong>. <br /> This project is focused primarily on singleplayer gameplay, offering an offline RuneScape experience. You can find here a ready-to-play package available for download in the right-hand menu. <br />
+                                   <br> The site is frequently updated — feel free to explore and come back often.
                               </p>
+                              <hr>
+                              <br>
                               <p> Official repository: <a href="https://gitlab.com/rspsdev/530-server" target="_blank">gitlab.com/rspsdev/530-server</a>
-                                   <br/> This project is based on and forked from <a href="https://gitlab.com/2009scape/2009scape" target="_blank">2009Scape</a>. <br/> For those interested in RSPS development, we encourage you to explore the open-source projects listed in the links section at the bottom right of this page.
-                              </p>
+                                   <br /> This project is based on and forked from <a href="https://gitlab.com/2009scape/2009scape" target="_blank">2009Scape</a>. <br />
+                                   <br> For those interested in RSPS development, I encourage you to explore the open-source projects listed in the links section at the bottom right of this page.
                          </div>
                          <h1>Message Board</h1>
                          <hr />
                          <div class="message-box">
-                              <h3 style="margin-top: 0;">[2025-07-29] New tools available</h3>
-                              <p> The Cache Editor is now available for download in alpha. Some features are still in development. <br/> Feedback is welcome via <a href="https://gitlab.com/rspsdev/530-server/-/issues" target="_blank">GitLab Issues</a>. <br/> More information and download can be found under the <strong>
+                              <span class="info-date" id="message-date">29.07.2025</span>
+                              <h3 style="margin-top: 0;">New tool</h3>
+                              <p> The Cache Editor is now available for download in alpha. Some features are still in development. <br /> Feedback is welcome via <a href="https://gitlab.com/rspsdev/530-server/-/issues" target="_blank">GitLab Issues</a>. <br /> More information and download can be found under the <strong>
                                         <a href="content/menu/editor.html">Tools</a>
                                    </strong> section. </p>
                          </div>
@@ -152,7 +165,7 @@
                     month: "2-digit",
                     day: "2-digit",
                });
-               document.getElementById("current-date").textContent = `Today: ${formattedNow}`;
+               document.getElementById("header-date").textContent = `Today: ${formattedNow}`;
           </script>
           <script>
                async function fetchLatestCommitDate() {
