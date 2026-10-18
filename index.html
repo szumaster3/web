@@ -110,202 +110,223 @@
         background-color: #857556;
         transform: scale(1.05);
       }
+
+      .download-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 24px;
+        padding: 18px 20px;
+        background: #f4f0e7;
+        border: 1px solid #c9bea8;
+        border-radius: 5px;
+        color: #3f392f;
+        font-family: "Lucida Sans Unicode", Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+      }
+
+      .download-panel h2 {
+        margin: 0 0 8px;
+        font-size: 1.35em;
+        color: #514633;
+      }
+
+      .download-panel p {
+        margin: 5px 0;
+        line-height: 1.55;
+      }
+
+      .download-panel .download-note {
+        font-size: 0.9em;
+        color: #706858;
+      }
+
+      .download-button {
+        display: inline-block;
+        padding: 11px 24px;
+        background: #685B45;
+        border: 1px solid #514633;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1.05em;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+      }
+
+      .download-button:hover {
+        background: #857556;
+        transform: translateY(-1px);
+      }
+      }
     </style>
   </head>
   <body>
-   <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const contentDiv = document.querySelector('.content');
-  if (!contentDiv) return;
-
-  let messagesContainer = document.getElementById('messagesContainer');
-  if (!messagesContainer) {
-    messagesContainer = document.createElement('div');
-    messagesContainer.id = 'messagesContainer';
-    contentDiv.appendChild(messagesContainer);
-  }
-
-  const messagesPerPage = 6;
-  const messages = [];
-  let currentPage = 1;
-  let totalPages = 1;
-
-  function createMessageBox(text, dateStr = '', title = '') {
-    const box = document.createElement('div');
-    box.className = 'message-box';
-
-    if (dateStr) {
-      const dateSpan = document.createElement('span');
-      dateSpan.className = 'info-date';
-      dateSpan.textContent = dateStr;
-      box.appendChild(dateSpan);
-    }
-
-    if (title) {
-      const h3 = document.createElement('h3');
-      h3.style.marginTop = '0';
-      h3.textContent = title;
-      box.appendChild(h3);
-    }
-
-    text.split('\n').forEach(line => {
-      line = line.trim();
-      if (!line) return;
-      if (line.startsWith('-')) {
-        let ul = box.querySelector('ul');
-        if (!ul) {
-          ul = document.createElement('ul');
-          box.appendChild(ul);
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const contentDiv = document.querySelector('.content');
+        if (!contentDiv) return;
+        let messagesContainer = document.getElementById('messagesContainer');
+        if (!messagesContainer) {
+          messagesContainer = document.createElement('div');
+          messagesContainer.id = 'messagesContainer';
+          contentDiv.appendChild(messagesContainer);
         }
-        const li = document.createElement('li');
-        li.innerHTML = line.substring(1).trim();
-        ul.appendChild(li);
-      } else {
-        const p = document.createElement('p');
-        p.innerHTML = line;
-        box.appendChild(p);
-      }
-    });
+        const messagesPerPage = 6;
+        const messages = [];
+        let currentPage = 1;
+        let totalPages = 1;
 
-    return box;
-  }
+        function createMessageBox(text, dateStr = '', title = '') {
+          const box = document.createElement('div');
+          box.className = 'message-box';
+          if (dateStr) {
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'info-date';
+            dateSpan.textContent = dateStr;
+            box.appendChild(dateSpan);
+          }
+          if (title) {
+            const h3 = document.createElement('h3');
+            h3.style.marginTop = '0';
+            h3.textContent = title;
+            box.appendChild(h3);
+          }
+          text.split('\n').forEach(line => {
+            line = line.trim();
+            if (!line) return;
+            if (line.startsWith('-')) {
+              let ul = box.querySelector('ul');
+              if (!ul) {
+                ul = document.createElement('ul');
+                box.appendChild(ul);
+              }
+              const li = document.createElement('li');
+              li.innerHTML = line.substring(1).trim();
+              ul.appendChild(li);
+            } else {
+              const p = document.createElement('p');
+              p.innerHTML = line;
+              box.appendChild(p);
+            }
+          });
+          return box;
+        }
+        async function loadMessages() {
+          try {
+            const response = await fetch('./main/messages.json');
+            if (!response.ok) throw new Error('Failed to fetch messages');
+            const data = await response.json();
+            if (!Array.isArray(data) || data.length === 0) {
+              const noMsgBox = document.createElement('div');
+              noMsgBox.className = 'message-box';
+              noMsgBox.innerHTML = ' < p > No messages found. < /p>';
+              messagesContainer.appendChild(noMsgBox);
+              return;
+            }
+            data.forEach(msg => {
+              messages.unshift(createMessageBox(msg.body, msg.date, msg.title));
+            });
+            totalPages = Math.ceil(messages.length / messagesPerPage);
+            setupPagination();
+            renderMessagesPage(1);
+          } catch (err) {
+            const errorBox = document.createElement('div');
+            errorBox.className = 'message-box';
+            errorBox.innerHTML = ' < p > Failed to load messages. < /p>';
+            messagesContainer.appendChild(errorBox);
+            console.error(err);
+          }
+        }
 
-  async function loadMessages() {
-    try {
-      const response = await fetch('./main/messages.json');
-      if (!response.ok) throw new Error('Failed to fetch messages');
+        function renderMessagesPage(page) {
+          page = Math.max(1, Math.min(page, totalPages));
+          currentPage = page;
+          messagesContainer.innerHTML = '';
+          const start = (page - 1) * messagesPerPage;
+          const end = start + messagesPerPage;
+          const fragment = document.createDocumentFragment();
+          for (let i = start; i < end && i < messages.length; i++) {
+            fragment.appendChild(messages[i]);
+          }
+          messagesContainer.appendChild(fragment);
+          messagesContainer.scrollTop = 0;
+          document.getElementById('prevPage').disabled = currentPage === 1;
+          document.getElementById('nextPage').disabled = currentPage === totalPages;
+          renderPageNumbers();
+        }
 
-      const data = await response.json();
+        function renderPageNumbers() {
+          const container = document.getElementById('pageNumbers');
+          container.innerHTML = '';
+          const maxVisible = 5;
+          let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+          let endPage = startPage + maxVisible - 1;
+          if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxVisible + 1);
+          }
+          if (startPage > 1) {
+            const firstBtn = document.createElement('button');
+            firstBtn.type = 'button';
+            firstBtn.textContent = '1';
+            firstBtn.addEventListener('click', () => renderMessagesPage(1));
+            container.appendChild(firstBtn);
+            const dots = document.createElement('span');
+            dots.textContent = ' ... ';
+            container.appendChild(dots);
+          }
+          for (let i = startPage; i <= endPage; i++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = i;
+            btn.classList.toggle('active', i === currentPage);
+            btn.addEventListener('click', e => {
+              e.preventDefault();
+              renderMessagesPage(i);
+            });
+            container.appendChild(btn);
+          }
+          if (endPage < totalPages) {
+            const dots = document.createElement('span');
+            dots.textContent = ' ... ';
+            container.appendChild(dots);
+            const lastBtn = document.createElement('button');
+            lastBtn.type = 'button';
+            lastBtn.textContent = totalPages;
+            lastBtn.addEventListener('click', () => renderMessagesPage(totalPages));
+            container.appendChild(lastBtn);
+          }
+        }
 
-      if (!Array.isArray(data) || data.length === 0) {
-        const noMsgBox = document.createElement('div');
-        noMsgBox.className = 'message-box';
-        noMsgBox.innerHTML = '<p>No messages found.</p>';
-        messagesContainer.appendChild(noMsgBox);
-        return;
-      }
-
-      data.forEach(msg => {
-        messages.unshift(createMessageBox(msg.body, msg.date, msg.title));
+        function setupPagination() {
+          document.getElementById('prevPage').addEventListener('click', e => {
+            e.preventDefault();
+            renderMessagesPage(currentPage - 1);
+          });
+          document.getElementById('nextPage').addEventListener('click', e => {
+            e.preventDefault();
+            renderMessagesPage(currentPage + 1);
+          });
+        }
+        const backToTop = document.createElement('button');
+        backToTop.id = 'backToTop';
+        backToTop.title = 'Back to top';
+        backToTop.textContent = '↑';
+        document.body.appendChild(backToTop);
+        window.addEventListener('scroll', () => {
+          backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+        });
+        backToTop.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+        loadMessages();
       });
-
-      totalPages = Math.ceil(messages.length / messagesPerPage);
-      setupPagination();
-      renderMessagesPage(1);
-
-    } catch (err) {
-      const errorBox = document.createElement('div');
-      errorBox.className = 'message-box';
-      errorBox.innerHTML = '<p>Failed to load messages.</p>';
-      messagesContainer.appendChild(errorBox);
-      console.error(err);
-    }
-  }
-
-  function renderMessagesPage(page) {
-    page = Math.max(1, Math.min(page, totalPages));
-    currentPage = page;
-
-    messagesContainer.innerHTML = '';
-    const start = (page - 1) * messagesPerPage;
-    const end = start + messagesPerPage;
-    const fragment = document.createDocumentFragment();
-
-    for (let i = start; i < end && i < messages.length; i++) {
-      fragment.appendChild(messages[i]);
-    }
-
-    messagesContainer.appendChild(fragment);
-    messagesContainer.scrollTop = 0;
-
-    document.getElementById('prevPage').disabled = currentPage === 1;
-    document.getElementById('nextPage').disabled = currentPage === totalPages;
-
-    renderPageNumbers();
-  }
-
-  function renderPageNumbers() {
-    const container = document.getElementById('pageNumbers');
-    container.innerHTML = '';
-
-    const maxVisible = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-    let endPage = startPage + maxVisible - 1;
-
-    if (endPage > totalPages) {
-      endPage = totalPages;
-      startPage = Math.max(1, endPage - maxVisible + 1);
-    }
-
-    if (startPage > 1) {
-      const firstBtn = document.createElement('button');
-      firstBtn.type = 'button';
-      firstBtn.textContent = '1';
-      firstBtn.addEventListener('click', () => renderMessagesPage(1));
-      container.appendChild(firstBtn);
-
-      const dots = document.createElement('span');
-      dots.textContent = ' ... ';
-      container.appendChild(dots);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = i;
-      btn.classList.toggle('active', i === currentPage);
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        renderMessagesPage(i);
-      });
-      container.appendChild(btn);
-    }
-
-    if (endPage < totalPages) {
-      const dots = document.createElement('span');
-      dots.textContent = ' ... ';
-      container.appendChild(dots);
-
-      const lastBtn = document.createElement('button');
-      lastBtn.type = 'button';
-      lastBtn.textContent = totalPages;
-      lastBtn.addEventListener('click', () => renderMessagesPage(totalPages));
-      container.appendChild(lastBtn);
-    }
-  }
-
-  function setupPagination() {
-    document.getElementById('prevPage').addEventListener('click', e => {
-      e.preventDefault();
-      renderMessagesPage(currentPage - 1);
-    });
-
-    document.getElementById('nextPage').addEventListener('click', e => {
-      e.preventDefault();
-      renderMessagesPage(currentPage + 1);
-    });
-  }
-
-  const backToTop = document.createElement('button');
-  backToTop.id = 'backToTop';
-  backToTop.title = 'Back to top';
-  backToTop.textContent = '↑';
-  document.body.appendChild(backToTop);
-
-  window.addEventListener('scroll', () => {
-    backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-  });
-
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-
-  loadMessages();
-});
-</script>
+    </script>
     <div class="container">
       <div class="header">
         <div class="title">
@@ -320,6 +341,15 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="main">
         <div class="content">
+          <section class="download-panel" aria-labelledby="download-heading">
+            <div>
+              <h2 id="download-heading">RS2 — Ready-to-Play Build</h2>
+              <p> A precompiled single-player build of <a href="https://gitlab.com/single-player/rs2">rs2</a> (RuneScape build 530, January 2009), based on <a href="https://gitlab.com/2009scape/2009scape">2009scape</a>, including the game client and Java runtime. </p>
+              <p> No installation required — just run <code>launch.bat</code>. See the <a href="https://github.com/szumaster3/runescape/commits/windows/">commit history</a> for updates. </p>
+              <p class="download-note"> Not affiliated with Jagex or the upstream 2009scape team. </p>
+            </div>
+            <a class="download-button" href="https://github.com/szumaster3/runescape/archive/refs/heads/windows.zip"> Download RS2 </a>
+          </section>
           <h1>Message Board</h1>
           <hr />
           <br>
@@ -399,7 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <span id="pageNumbers"></span>
         <button id="nextPage">Next</button>
       </div>
-      <div class="footer">&copy; 2006–2025 <a href="https://github.com/szumaster3">szumaster</a>. Template design by <a href="https://vikpe.org/">vikpe</a>. <div class="navigation">
-    </div>
+      <div class="footer">&copy; 2006–2025 <a href="https://github.com/szumaster3">szumaster</a>. Template design by <a href="https://vikpe.org/">vikpe</a>. <div class="navigation"></div>
   </body>
 </html>
