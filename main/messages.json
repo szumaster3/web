@@ -408,5 +408,10 @@
     "date": "03.04.2026",
     "title": "Interface Editor Version: 1.0.16",
     "body": "Changelog:\n- Fix double click bug in sprite editor\n- Fix model positioning\n- Update model manager\n- Improve undo/redo system with full component state snapshot"
+  },
+  {
+	"date": "26.10.2026",
+	"title": "Interface Editor Version: 1.0.18",
+	"body": "Changelog:\n- Replaced the legacy mesh renderer with a new model decoder and software rasterizer\n- Removed obsolete model-related classes and fields\n- Added a new Model decoder ported from Simple-JFX-Model-Editor, supporting both new and 317 model formats\n- Implemented client-style vertex lighting and Gouraud shading\n- Fixed version byte handling in the new model format\n- Added ModelLoader with model caching from index 7\n- Added ModelRenderer with HSL palette support, back-face culling and face priorities\n- Fixed model positioning by treating modelOriginX/Y as pixel offsets and removing the automatic half-height offset\n- Restricted model rendering to component bounds\n- Updated EditorInterfaceDraw, ModelPanel, ModelViewerRenderer and ModelViewerFrame to use the new rendering system"
   }
 ]
