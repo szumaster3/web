@@ -415,8 +415,13 @@
 	"body": "Changelog:\n- Replaced the legacy mesh renderer with a new model decoder and software rasterizer\n- Removed obsolete model-related classes and fields\n- Added a new Model decoder ported from Simple-JFX-Model-Editor, supporting both new and 317 model formats\n- Implemented client-style vertex lighting and Gouraud shading\n- Fixed version byte handling in the new model format\n- Added ModelLoader with model caching from index 7\n- Added ModelRenderer with HSL palette support, back-face culling and face priorities\n- Fixed model positioning by treating modelOriginX/Y as pixel offsets and removing the automatic half-height offset\n- Restricted model rendering to component bounds\n- Updated EditorInterfaceDraw, ModelPanel, ModelViewerRenderer and ModelViewerFrame to use the new rendering system"
   },
   {
-  "date": "28.10.2026",
-  "title": "Interface Editor Version: 1.0.19",
-  "body": "Changelog:\n- Added IF1 interface decoding, encoding and rendering compatible with the revision 530 client\n- Fixed realSize overwriting baseWidth and baseHeight\n- Fixed string encoding to use ISO-8859-1 and restricted opId serialization to existing slots\n- Fixed model positioning, interface importing, layer removal and component IDs"
+	"date": "28.10.2026",
+	"title": "Interface Editor Version: 1.0.19",
+	"body": "Changelog:\n- Added IF1 interface decoding, encoding and rendering compatible with the revision 530 client\n- Fixed realSize overwriting baseWidth and baseHeight\n- Fixed string encoding to use ISO-8859-1 and restricted opId serialization to existing slots\n- Fixed model positioning, interface importing, layer removal and component IDs"
+  },
+  {
+	"date": "31.10.2026",
+	"title": "Interface Editor Version: 1.0.20",
+	"body": "Changelog:\n- Added IF1 interface editing, including IF1 properties, inventory fields and CS1 scripts\n- Added Inventory, Inventory Text, Model List and Tooltip component types\n- Added ItemDefinition and ItemIcons support for rendering inventory items\n- Allowed removing component 0 from IF1 interfaces and fixed stale selection handling\n- Fixed right-click options serialization to write only used options\n- Deduplicated ComponentTemplates and removed unused code\n- Added IF1/IF3 format selection when creating new interfaces\n- Added IF1-specific component creation options\n- Added item definition export functionality\n- Improved menu organization and toolbar actions\n- Added formatting support for all primitive array types and fixed BooleanArray output\n- Improved component property filtering when exporting\n- Fixed initial Center Panel dimensions and IF1/IF3 property section visibility"
   }
 ]
