@@ -423,5 +423,10 @@
 	"date": "31.10.2026",
 	"title": "Interface Editor Version: 1.0.20",
 	"body": "Changelog:\n- Added IF1 interface editing, including IF1 properties, inventory fields and CS1 scripts\n- Added Inventory, Inventory Text, Model List and Tooltip component types\n- Added ItemDefinition and ItemIcons support for rendering inventory items\n- Allowed removing component 0 from IF1 interfaces and fixed stale selection handling\n- Fixed right-click options serialization to write only used options\n- Deduplicated ComponentTemplates and removed unused code\n- Added IF1/IF3 format selection when creating new interfaces\n- Added IF1-specific component creation options\n- Added item definition export functionality\n- Improved menu organization and toolbar actions\n- Added formatting support for all primitive array types and fixed BooleanArray output\n- Improved component property filtering when exporting\n- Fixed initial Center Panel dimensions and IF1/IF3 property section visibility"
+  },
+  {
+	"date": "01.11.2026",
+	"title": "Interface Editor Version: 1.0.21",
+	"body": "Changelog:\n- Added cache-based font decoding and client-accurate rendering, including kerning, text wrapping, alignment, effects and formatting tags\n- Updated font preview to display all cached fonts and support custom text with formatting tags\n- Fixed component template copying and selection in addComponent()\n- Added proper IF1 model list component creation\n- Fixed CS1 section height calculation\n- Verified byte-for-byte accurate IF1 and IF3 serialization"
   }
 ]
