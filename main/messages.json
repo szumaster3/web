@@ -428,5 +428,10 @@
 	"date": "01.11.2026",
 	"title": "Interface Editor Version: 1.0.21",
 	"body": "Changelog:\n- Added cache-based font decoding and client-accurate rendering, including kerning, text wrapping, alignment, effects and formatting tags\n- Updated font preview to display all cached fonts and support custom text with formatting tags\n- Fixed component template copying and selection in addComponent()\n- Added proper IF1 model list component creation\n- Fixed CS1 section height calculation\n- Verified byte-for-byte accurate IF1 and IF3 serialization"
+  },
+  {
+	"date": "01.11.2026",
+    "title": "Interface Editor Version: 1.0.22",
+    "body": "Changelog:\n- Fix cs1Section height\n- Bump version"
   }
 ]
